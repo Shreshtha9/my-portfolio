@@ -1,0 +1,112 @@
+/* =========================================================
+   City -> Room -> Journey experience
+   ========================================================= */
+
+/* ---------- City ---------- */
+.city-twinkle { animation: city-twinkle 3.4s ease-in-out infinite; }
+@keyframes city-twinkle { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
+
+.city-blink { animation: city-blink 1.8s steps(1) infinite; }
+@keyframes city-blink { 0%, 55% { opacity: 1; } 56%, 100% { opacity: 0.08; } }
+
+.city-pulse-ring {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: city-ring 2.4s ease-out infinite;
+}
+@keyframes city-ring {
+  0% { opacity: 0.95; transform: scale(1); }
+  100% { opacity: 0; transform: scale(1.4); }
+}
+
+.city-monitor-flicker { animation: city-mon 4.5s infinite; }
+@keyframes city-mon {
+  0%, 91%, 100% { opacity: 1; }
+  93% { opacity: 0.55; }
+  95% { opacity: 1; }
+  97% { opacity: 0.75; }
+}
+
+/* flying traffic (positions are in 1600x900 design pixels) */
+.city-car {
+  position: absolute;
+  left: 0;
+  border-radius: 999px;
+  pointer-events: none;
+  animation: city-drift-r linear infinite;
+}
+.city-car--l { animation-name: city-drift-l; }
+@keyframes city-drift-r { from { transform: translate3d(-200px, 0, 0); } to { transform: translate3d(1800px, 0, 0); } }
+@keyframes city-drift-l { from { transform: translate3d(1800px, 0, 0); } to { transform: translate3d(-200px, 0, 0); } }
+
+.city-blimp { animation: city-blimp 110s linear infinite; }
+@keyframes city-blimp { from { transform: translate3d(-320px, 0, 0); } to { transform: translate3d(1900px, 0, 0); } }
+
+/* the clickable glowing window */
+.city-hotspot {
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  outline: none;
+  transition: box-shadow 0.25s, background 0.25s;
+}
+.city-hotspot:hover,
+.city-hotspot:focus-visible {
+  background: rgba(0, 240, 255, 0.1);
+  box-shadow: 0 0 0 2px #00f0ff, 0 0 46px 10px rgba(0, 240, 255, 0.55);
+}
+.city-hotspot:disabled { pointer-events: none; }
+
+.city-label { transform: translate(-50%, 0); animation: city-label 2.2s ease-in-out infinite; }
+@keyframes city-label {
+  0%, 100% { transform: translate(-50%, 0); }
+  50% { transform: translate(-50%, -6px); }
+}
+
+/* ---------- Rain (screen space) ---------- */
+.rain-drop {
+  position: absolute;
+  top: -140px;
+  width: 1px;
+  background: linear-gradient(to bottom, transparent, rgba(170, 225, 255, 0.9));
+  transform: rotate(14deg);
+  animation: rain-fall linear infinite;
+}
+@keyframes rain-fall {
+  to { transform: translate3d(-27vh, 112vh, 0) rotate(14deg); }
+}
+
+/* ---------- Room ---------- */
+.room-line { opacity: 0; }
+.room-play .room-line { animation: room-line 0.01s forwards; }
+@keyframes room-line { to { opacity: 1; } }
+
+.rack-led { animation: rack-led 1.4s steps(1) infinite; }
+@keyframes rack-led { 0%, 60% { opacity: 1; } 61%, 100% { opacity: 0.15; } }
+
+.room-steam { animation: room-steam 3.2s ease-in-out infinite; }
+@keyframes room-steam {
+  0% { opacity: 0; transform: translateY(8px); }
+  40% { opacity: 0.6; }
+  100% { opacity: 0; transform: translateY(-26px); }
+}
+
+.room-drop {
+  position: absolute;
+  top: -40px;
+  width: 1px;
+  height: 36px;
+  background: linear-gradient(to bottom, transparent, rgba(190, 230, 255, 0.55));
+  animation: room-drop linear infinite;
+}
+@keyframes room-drop { to { transform: translateY(520px); } }
+
+/* ---------- Journey panels ---------- */
+.stage-scroll { scrollbar-width: thin; scrollbar-color: #ff2bd6 transparent; }
+.stage-scroll::-webkit-scrollbar { width: 5px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .city-twinkle, .city-blink, .city-pulse-ring, .city-monitor-flicker, .city-car, .city-blimp,
+  .city-label, .rain-drop, .rack-led, .room-steam, .room-drop { animation: none !important; }
+  .room-line { opacity: 1; }
+}
