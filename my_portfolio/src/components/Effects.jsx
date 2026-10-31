@@ -21,8 +21,8 @@ export const ScrollProgress = () => {
 export const Overlays = () => (
   <>
     <div className="grain" aria-hidden="true" />
-    <div className="scanlines" aria-hidden="true" />
-    <div className="vignette" aria-hidden="true" />
+   <div className="fx-overlay" aria-hidden="true" />
+    
   </>
 );
 
@@ -46,7 +46,7 @@ export const CursorGlow = () => {
     <motion.div
       aria-hidden="true"
       style={{ x: sx, y: sy }}
-      className="pointer-events-none fixed top-0 left-0 z-[1] h-[500px] w-[500px] rounded-full bg-neon-pink/15 blur-[110px] [@media(pointer:coarse)]:hidden"
+      className="cursor-glow pointer-events-none fixed top-0 left-0 z-[1] h-[900px] w-[900px] [@media(pointer:coarse)]:hidden"
     />
   );
 };

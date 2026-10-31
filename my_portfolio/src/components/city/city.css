@@ -3,17 +3,13 @@
    ========================================================= */
 
 /* ---------- City ---------- */
-.city-twinkle { animation: city-twinkle 3.4s ease-in-out infinite; }
+.city-twinkle-layer { animation: city-twinkle 3.4s ease-in-out infinite; will-change: opacity; pointer-events: none; }
 @keyframes city-twinkle { 0%, 100% { opacity: 0.2; } 50% { opacity: 1; } }
 
 .city-blink { animation: city-blink 1.8s steps(1) infinite; }
 @keyframes city-blink { 0%, 55% { opacity: 1; } 56%, 100% { opacity: 0.08; } }
 
-.city-pulse-ring {
-  transform-box: fill-box;
-  transform-origin: center;
-  animation: city-ring 2.4s ease-out infinite;
-}
+.city-pulse-ring { transform-origin: center; will-change: transform, opacity; animation: city-ring 2.4s ease-out infinite; }
 @keyframes city-ring {
   0% { opacity: 0.95; transform: scale(1); }
   100% { opacity: 0; transform: scale(1.4); }
@@ -84,7 +80,7 @@
 .rack-led { animation: rack-led 1.4s steps(1) infinite; }
 @keyframes rack-led { 0%, 60% { opacity: 1; } 61%, 100% { opacity: 0.15; } }
 
-.room-steam { animation: room-steam 3.2s ease-in-out infinite; }
+.room-steam { animation: room-steam 3.2s ease-in-out infinite; will-change: transform, opacity; }
 @keyframes room-steam {
   0% { opacity: 0; transform: translateY(8px); }
   40% { opacity: 0.6; }
@@ -105,8 +101,12 @@
 .stage-scroll { scrollbar-width: thin; scrollbar-color: #ff2bd6 transparent; }
 .stage-scroll::-webkit-scrollbar { width: 5px; }
 
+.city-paused, .city-paused * { animation-play-state: paused !important; }
+.room-paused .rack-led, .room-paused .room-steam, .room-paused .room-drop,
+.room-paused .animate-flicker, .room-paused .animate-blink { animation-play-state: paused !important; }
+
 @media (prefers-reduced-motion: reduce) {
-  .city-twinkle, .city-blink, .city-pulse-ring, .city-monitor-flicker, .city-car, .city-blimp,
+  .city-twinkle-layer, .city-blink, .city-pulse-ring, .city-monitor-flicker, .city-car, .city-blimp,
   .city-label, .rain-drop, .rack-led, .room-steam, .room-drop { animation: none !important; }
   .room-line { opacity: 1; }
 }

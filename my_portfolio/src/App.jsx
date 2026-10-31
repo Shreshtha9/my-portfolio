@@ -58,13 +58,14 @@ const App = () => {
     <div className="relative min-h-screen overflow-x-clip bg-ink">
       <BootIntro />
       <Overlays />
-      <CursorGlow />
+      
 
       {view === "city" ? (
         <CityExperience onClassic={openClassic} />
       ) : (
         <>
           <ScrollProgress />
+          <CursorGlow />
 
           {/* Neon grid that fades out towards the bottom of the first screen */}
           <div className="pointer-events-none fixed inset-0 bg-[linear-gradient(to_right,rgba(255,43,214,0.10)_1px,transparent_1px),linear-gradient(to_bottom,rgba(255,43,214,0.10)_1px,transparent_1px)] bg-[size:48px_48px] [mask-image:radial-gradient(ellipse_70%_60%_at_50%_0%,#000_40%,transparent_100%)]" />

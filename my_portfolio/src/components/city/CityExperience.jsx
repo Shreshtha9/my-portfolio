@@ -1,9 +1,9 @@
-import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
+import React, { Suspense, lazy, useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { animate, useMotionValue, useReducedMotion } from "framer-motion";
 import { W, H, ROOM_WIN, ROOM_CENTER, CitySvg, CityTraffic } from "./CitySvg";
 import Rain from "./Rain";
 import RoomScene, { ROOM_SCREEN } from "./RoomScene";
-import Journey from "./Journey";
+
 import "./city.css";
 
 // ---------------------------------------------------------------------------
@@ -13,7 +13,8 @@ import "./city.css";
 //    pCity : 0 = skyline, 1 = inside the room
 //    pRoom : 0 = looking at the room, 1 = inside the monitor (the journey)
 // ---------------------------------------------------------------------------
-
+const loadJourney = () => import("./Journey");
+const Journey = lazy(loadJourney);
 const clamp01 = (v) => Math.min(1, Math.max(0, v));
 const smooth = (a, b, v) => {
   const t = clamp01((v - a) / (b - a));
@@ -198,12 +199,15 @@ const CityExperience = ({ onClassic }) => {
   }, [back, enterJourney, leaveRoom]);
 
   const inJourney = phase === "toJourney" || phase === "journey" || phase === "fromJourney";
+  useEffect(() => { if (phase === "toRoom") loadJourney(); }, [phase]);
+const cityHidden = phase === "room" || inJourney;
+const roomHidden = phase === "city" || phase === "journey";
   const hint = HINTS[phase];
 
   return (
     <div className="fixed inset-0 z-20 overflow-hidden bg-ink">
       {/* ---------------- 1. the city ---------------- */}
-      <div ref={cityRef} className="absolute inset-0">
+      <div ref={cityRef} className={`absolute inset-0 ${cityHidden ? "city-paused" : ""}`}>
         <div
           ref={cameraRef}
           className="absolute left-0 top-0"
@@ -234,13 +238,15 @@ const CityExperience = ({ onClassic }) => {
 
       {/* ---------------- 2. the room ---------------- */}
       <div ref={roomRef} className="absolute inset-0 overflow-hidden" style={{ visibility: "hidden", opacity: 0 }}>
-        <RoomScene play={phase !== "city" && phase !== "toCity"} interactive={phase === "room"} onMonitor={enterJourney} />
+        <RoomScene play={phase !== "city" && phase !== "toCity"} paused={roomHidden} interactive={phase === "room"} onMonitor={enterJourney} />
       </div>
 
       {/* ---------------- 3. the journey (inside the monitor) ---------------- */}
       <div ref={journeyRef} className="absolute inset-0" style={{ visibility: "hidden", opacity: 0 }}>
         {inJourney && (
-          <Journey active={phase === "journey"} onExit={leaveJourney} onCity={toCity} onClassic={onClassic} />
+          <Suspense fallback={null}>
+            <Journey active={phase === "journey"} onExit={leaveJourney} onCity={toCity} onClassic={onClassic} />
+          </Suspense>
         )}
       </div>
 
@@ -252,7 +258,7 @@ const CityExperience = ({ onClassic }) => {
               type="button"
               onClick={back}
               disabled={phase !== "room" && phase !== "journey"}
-              className="cyber-clip-sm border border-neon-pink/60 bg-ink/70 px-4 py-2 font-mono text-xs uppercase tracking-widest text-neon-pink backdrop-blur transition hover:bg-neon-pink hover:text-ink disabled:opacity-50"
+              className="cyber-clip-sm border border-neon-pink/60 bg-ink/85 px-4 py-2 font-mono text-xs uppercase tracking-widest text-neon-pink  transition hover:bg-neon-pink hover:text-ink disabled:opacity-50"
             >
               ◂ {phase === "journey" || phase === "fromJourney" ? "Room" : "City"}
             </button>
